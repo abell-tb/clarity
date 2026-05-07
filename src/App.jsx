@@ -152,6 +152,8 @@ const healingSteps = [
 
 // ─── EMAIL SENDER ─────────────────────────────────────────────────────────────
 
+emailjs.init(EMAILJS_PUBLIC_KEY);
+
 async function sendResultsEmail(answers) {
   const flagged = answers.filter(a => !a.safe);
   const score = flagged.length;
@@ -163,34 +165,37 @@ async function sendResultsEmail(answers) {
 
   const answerLines = quizQuestions.map((q, i) => {
     const ans = answers[i];
-    const flag = ans?.safe ? "✅ Healthy" : "🚩 Flagged";
-    return `Q${i + 1}: ${q.text}\nAnswer: "${ans?.label || "N/A"}" — ${flag}`;
-  }).join("\n\n");
+    const flag = ans?.safe ? "Healthy" : "FLAGGED";
+    return `Q${i + 1}: ${q.text} | Answer: "${ans?.label || "N/A"}" (${flag})`;
+  }).join("\n");
 
   const flaggedInsights = answers
     .filter(a => !a.safe)
-    .map(a => `• ${a.insight}`)
+    .map(a => `- ${a.insight}`)
     .join("\n");
 
   const summaryText = score === 0
-    ? "His answers did not flag any concerning patterns — things appear relatively healthy from his perspective."
-    : `He flagged ${score} out of 8 questions. The patterns that showed up:\n\n${flaggedInsights}`;
+    ? "His answers did not flag any concerning patterns."
+    : `He flagged ${score} out of 8 questions. Patterns that showed up:\n${flaggedInsights}`;
 
   const templateParams = {
     to_email: "Anthony@bellhome.co",
-    subject: "💛 Quiz Results — Your Son Just Finished",
-    timestamp,
+    timestamp: timestamp,
     score: `${score} out of 8`,
     summary: summaryText,
     full_answers: answerLines,
   };
 
-  await emailjs.send(
-    EMAILJS_SERVICE_ID,
-    EMAILJS_TEMPLATE_ID,
-    templateParams,
-    EMAILJS_PUBLIC_KEY
-  );
+  try {
+    const response = await emailjs.send(
+      EMAILJS_SERVICE_ID,
+      EMAILJS_TEMPLATE_ID,
+      templateParams
+    );
+    console.log("Email sent:", response.status, response.text);
+  } catch (err) {
+    console.error("EmailJS error:", err);
+  }
 }
 
 // ─── APP ──────────────────────────────────────────────────────────────────────
