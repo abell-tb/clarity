@@ -8,9 +8,9 @@ import emailjs from "@emailjs/browser";
 //   2. Create an Email Template (see README for template variables)
 //   3. Copy your Public Key from Account > API Keys
 // ─────────────────────────────────────────────────────────────────────────────
-const EMAILJS_SERVICE_ID  = "YOUR_SERVICE_ID";   // e.g. "service_abc123"
-const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";  // e.g. "template_xyz789"
-const EMAILJS_PUBLIC_KEY  = "YOUR_PUBLIC_KEY";   // e.g. "abcDEFghiJKL..."
+const EMAILJS_SERVICE_ID  = "service_12b0rei";
+const EMAILJS_TEMPLATE_ID = "template_90fdaen";
+const EMAILJS_PUBLIC_KEY  = "z1BoyoRhJlu5fsF-e";
 
 // ─── QUIZ DATA ────────────────────────────────────────────────────────────────
 
